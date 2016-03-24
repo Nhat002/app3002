@@ -10,12 +10,17 @@ var forecast = new Forecast({
 		minutes:60
 	}
 });
-var job = new CronJob("00 00 04 * * *",function(){
-		forecast.get([1.2896700,103.8500700],true,function(err,weather){
-			if(err) return console.dir(err);
-			var hourly_result = weather["hourly"];
+var job = new CronJob("0 */4 * * * *",function(){
+	forecast.get([1.2896700,103.8500700],true,function(err,weather){
+		if(err) return console.dir(err);
+		var hourly_result = weather["hourly"];
+		var data = hourly_result["data"];
+
+		console.log(hourly_result);
 	},function(){
 	},
 	true,
-	'Asia/Singapore'
-);
+	'Asia/Singapore');
+});
+job.start();
+module.exports = CronJob;

@@ -7,7 +7,8 @@ var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var routes = require('./routes/index');
 var users = require('./routes/users');
-
+var weather = require('./routes/weather');
+var cronjob = require('./routes/cronjobAPI');
 var app = express();
 mongoose.connect('mongodb://localhost/app3002');
 // view engine setup
@@ -25,8 +26,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', routes);
 app.use('/users', users);
 app.use('/weatherdata',weather);
-app.use('/healthcaredata',healthcaredata);
-app.use('/diseasedata', diseasedata);
+/*app.use('/healthcaredata',healthcaredata);
+app.use('/diseasedata', diseasedata);*/
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
