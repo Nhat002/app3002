@@ -8,11 +8,10 @@ var mongoose = require('mongoose');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var weather = require('./routes/weather');
-var WeatherData = require('./models/WeatherData.js');
 
 var app = express();
 mongoose.connect('mongodb://localhost/app3002');
-
+var WeatherData = require('./models/WeatherData.js');
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
