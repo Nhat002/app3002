@@ -8,9 +8,11 @@ var mongoose = require('mongoose');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var weather = require('./routes/weather');
-var cronjob = require('./routes/cronjobAPI');
+var WeatherData = require('./models/WeatherData.js');
+
 var app = express();
 mongoose.connect('mongodb://localhost/app3002');
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -25,7 +27,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/users', users);
-app.use('/weatherdata',weather);
+app.use('/weather',weather);
+var cronjob = require('./routes/cronjobAPI');
 /*app.use('/healthcaredata',healthcaredata);
 app.use('/diseasedata', diseasedata);*/
 // catch 404 and forward to error handler
