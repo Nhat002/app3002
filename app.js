@@ -5,13 +5,14 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
+var WeatherData = require('./models/WeatherData.js');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var weather = require('./routes/weather');
 
 var app = express();
 mongoose.connect('mongodb://localhost/app3002');
-var WeatherData = require('./models/WeatherData.js');
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
