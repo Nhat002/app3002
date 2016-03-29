@@ -6,10 +6,11 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var WeatherData = require('./models/WeatherData.js');
+var DiseaseData = require('./models/DiseaseData.js');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var weather = require('./routes/weather');
-
+var disease= require('./routes/disease');
 var app = express();
 mongoose.connect('mongodb://localhost/app3002');
 
@@ -28,6 +29,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', routes);
 app.use('/users', users);
 app.use('/weather',weather);
+app.use('/disease',disease);
 var cronjob = require('./routes/cronjobAPI');
 /*app.use('/healthcaredata',healthcaredata);
 app.use('/diseasedata', diseasedata);*/

@@ -1,8 +1,13 @@
 var Forecast = require('forecast');
 var CronJob = require('cron').CronJob;
+var request = require('request');
+var cheerio = require('cheerio');
 var Promise = require('promise');
 var mongoose = require('mongoose');
 var weatherData = mongoose.model('WeatherData');
+var diseaseData = mongoose.model('DiseaseData');
+
+
 var forecast = new Forecast({
 	service: 'forecast.io',
 	key: 'd11c7c57cc4586b39d2f0a287b447879',
@@ -54,7 +59,7 @@ function processWeatherData(weather,dataProcessed){
 	})
 }
 
-var weather_job = new CronJob("0 */3 * * * *",function(){
+var weather_job = new CronJob("0 0 */3 * * *",function(){
 		console.log("start cron\n");
 		forecast.get([1.2896700,103.8500700],true,function(err,weather) {
 			if (err) return console.dir(err);
@@ -67,5 +72,47 @@ var weather_job = new CronJob("0 */3 * * * *",function(){
 	},
 	true,
 	'Asia/Singapore');
+
+var dengueJob = new CronJob("0 */5 * * * *",function(){
+	request('http://www.dengue.gov.sg',function(err, res, html){
+		if(!err && res.statusCode == 200){
+			var dailyCase = new Object();
+			var cumulativeCase = new Object();
+			var time = new Date().getTime();
+			var $ = cheerio.load(html);
+			$('#month-space-multi').each(function(i,element){
+				if(i==0){
+					dailyCase["updateTime"] = time;
+					dailyCase["diseaseType"] = "dengue";
+					dailyCase["diseaseTitle"] = $(this).text().toString().trim();
+					dailyCase["diseaseContent"] = $(this).parent().parent().next().find('div').find('font').find('b').text() + " cases";
+
+				}
+				else if(i==1){
+					cumulativeCase["updateTime"] = time;
+					cumulativeCase["diseaseType"] ="dengue";
+					cumulativeCase["diseaseTitle"] = $(this).text().toString().trim();
+					cumulativeCase["diseaseContent"] = $(this).parent().parent().next().find('div').find('div').find('font').find('b').text() + " cases";
+				}
+
+			});
+			diseaseData.remove({},function(err,docs) {
+				if(err){next(err);}
+				diseaseData.create(dailyCase, function (err, doc) {
+					if (err) {
+						next(err);
+					}
+					diseaseData.create(cumulativeCase, function (err, doc) {
+						if (err) {
+							next(err);
+						}
+					})
+				});
+			});
+
+		}
+	});
+});
+dengueJob.start();
 weather_job.start();
 module.exports = CronJob;
