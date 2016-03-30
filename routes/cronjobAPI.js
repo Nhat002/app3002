@@ -59,8 +59,8 @@ function processWeatherData(weather,dataProcessed){
 	})
 }
 
-var weather_job = new CronJob("0 0 */3 * * *",function(){
-		console.log("start cron\n");
+var weather_job = new CronJob("0 */10 * * * *",function(){
+		console.log("start load forecast data\n");
 		forecast.get([1.2896700,103.8500700],true,function(err,weather) {
 			if (err) return console.dir(err);
 			var dataProcessed = [];
@@ -73,7 +73,7 @@ var weather_job = new CronJob("0 0 */3 * * *",function(){
 	true,
 	'Asia/Singapore');
 
-var dengueJob = new CronJob("0 */5 * * * *",function(){
+var dengueJob = new CronJob("0 */10 * * * *",function(){
 	request('http://www.dengue.gov.sg',function(err, res, html){
 		if(!err && res.statusCode == 200){
 			var dailyCase = new Object();
